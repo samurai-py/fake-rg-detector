@@ -1,7 +1,6 @@
 import os
 from app import app
 from flask import request, render_template
-import os
 from skimage.metrics import structural_similarity
 import imutils
 import cv2
@@ -13,15 +12,15 @@ app.config['EXISTING_FILE'] = 'app/static/original'
 app.config['GENERATED_FILE'] = 'app/static/generated'
 
 # Route to home page
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
 
     # Execute if request is get
-    if request.method == 'GET':
-        return render_template('index_html')
+    if request.method == "GET":
+        return render_template("index_html")
 
     # Execute if request is post
-    if request.method == 'POST':
+    if request.method == "POST":
         # Get uploaded image
         file_upload = request.files['file_upload']
         filename = file_upload.filename
@@ -43,8 +42,8 @@ def index():
         uploaded_gray = cv2.cvtColor(uploaded_image, cv2.COLOR_BGR2GRAY)
 
         # Calculate structural similarity
-        (score, diff) = structural_similarity(original_gray, tampered_gray, full=True)
-        diff = (diff * 255).astype('uint8')
+        (score, diff) = structural_similarity(original_gray, uploaded_gray, full=True)
+        diff = (diff * 255).astype("uint8")
 
         # Calculate threshold and contours
         thresh = cv2.threshold(diff, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
